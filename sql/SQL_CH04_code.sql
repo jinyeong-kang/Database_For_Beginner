@@ -1,0 +1,110 @@
+4.1. 데이터 처리 표준어: SQL 
+-- 01 코드
+CREATE TABLE person (
+    personid INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    age INT,
+    birthdate DATE,
+    gender CHAR(1),
+    legalname VARCHAR(255),
+    height INT,
+    shoesize INT,
+    PRIMARY KEY (personid)
+);
+
+-- 03 코드
+DESC person;
+
+-- 04 코드 
+DROP TABLE person;
+
+
+4.4. 데이터 조작어 
+-- INSERT 문 
+-- ① 
+INSERT INTO person (personid, name, age, birthdate, gender, legalname, height, shoesize)
+VALUES (1,'아이유',29,'1993-05-16','2','이지은',162,225);
+-- ②
+INSERT INTO person
+VALUES (1,'아이유',29,'1993-05-16','2','이지은',162,225);
+
+-- ①
+INSERT INTO person (name, age, birthdate, gender)
+VALUES ('이찬혁',28,'1996-09-12','1');
+-- ②
+INSERT INTO person (name, age, birthdate, gender, legalname, height, shoesize)
+VALUES ('제니',28,'1996-01-26','2', NULL, NULL, NULL);
+
+INSERT INTO person (personid, name, age, birthdate, gender, legalname, height, shoesize)
+VALUES (4, '이무진', 24, '2000-12-28', '1', NULL, 173, 270),
+(5, '로제', 27, '1997-02-11', '2', '박채영', 168, 240),
+(6, '지수', 29, '1995-01-03', '2', '김지수', 162, 235);
+
+-- UPDATE 문 
+UPDATE person
+SET height = 163,
+shoesize = 235
+WHERE personid = 3;
+
+UPDATE person
+SET height = 175
+WHERE gender = 1;
+
+UPDATE person
+SET height = 163,
+    shoesize = 235;
+
+-- DELETE 문 
+DELETE FROM person
+WHERE personid = 4;
+
+DELETE FROM person;
+
+-- 실습용 테이블과 데이터 
+-- 회사(corp) 테이블 생성하기
+CREATE TABLE corp (
+    corpid INT NOT NULL AUTO_INCREMENT,
+    corpname VARCHAR(80) NOT NULL,
+    ceo VARCHAR(40) NOT NULL,
+    estdate DATE,
+    location VARCHAR(200),
+    PRIMARY KEY (corpid)
+);
+
+INSERT INTO corp (corpid, corpname, ceo, estdate, location)
+VALUES 
+(1, '한바다', '한선영', '2022-06-29',  '서울시 강남구 테헤란로 103길 17'),
+(2, '돌담', '부용주', '2016-11-07', '강원도 강릉시 경강로 2007'),
+(3, '청해진', '김수종', '2004-11-24', '전라남도 완도군 장도'),
+(4, '정원고', '김두식', '2023-08-09', '서울시 중구 회현동 1가'),
+(5, '글로리', '이양화', '2018-07-07', '서울시 종로구 효자로 12');
+
+-- 인물(person) 테이블 생성하기
+CREATE TABLE person (
+    personid INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(40) NOT NULL,
+    job VARCHAR(60),
+    birthdate DATE,
+    gender CHAR(1),
+    nickname VARCHAR(40),
+    height INT,
+    weight INT,
+    followers INT,
+    agencyid INT,
+    PRIMARY KEY (personid),
+    CONSTRAINT FK_agency FOREIGN KEY (agencyid) REFERENCES corp(corpid)
+);
+
+INSERT INTO person (name, job, birthdate, gender, nickname, height, weight, followers, agencyid)
+VALUES
+('장보고', '군인', '1993-05-16', '1', '해신', 168, 65, NULL, 3),
+('장주원', '공무원', '1970-11-29', '1', '구룡포', 175, 82, NULL, 4),
+('김봉석', '학생', '1996-01-26', '1', '비행', 181, 94, NULL, 4),
+('정명석', '변호사', '1983-10-14', '1', NULL, 178, 70, NULL, 1),
+('강동주', '의사', '1987-04-06', '1', NULL, 183, 73, 2413000, 2),
+('차은재', '의사', '1988-05-06', '2', '또잉_또잉', 174, 50, 15270000, 2),
+('우영우', '변호사', '1992-09-04', '2', '나는_고래', 163, 45, 3426000, 1),
+('유길채', '세공사', '1991-05-06', '2', NULL, 168, 48, 1304000, NULL),
+('장희수', '학생', '1996-04-02', '2', '무한재생', 167, 47, 6650000, 4),
+('장현', '통역관', '1978-03-12', '1', '이장현', 177, 67, 1650000, NULL),
+('서우진', '의사', '1988-05-06', '1', '모난돌', 187, 74, 13530000, 2);

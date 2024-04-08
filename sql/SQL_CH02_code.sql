@@ -1,0 +1,238 @@
+-- 2.1. 데이터 규칙 
+-- 실습으로 데이터 규칙 익히기 
+-- 실체 무결성 예시 
+-- 01 코드
+CREATE TABLE emp (
+    empno varchar(8) NOT NULL, -- 사원번호
+    ename varchar(40) NOT NULL, -- 이름
+    hire_date varchar(8) NOT NULL, -- 입사일자
+    rrn varchar(13) NOT NULL, -- 주민등록번호
+    mobile varchar(13), -- 이동전화번호
+    status varchar(1) NOT NULL default 'C', -- 재직상태
+    CONSTRAINT EMP_EMPNO_PK PRIMARY KEY (empno),
+    CONSTRAINT EMP_RRN_UK UNIQUE (rrn, hire_date),
+    CONSTRAINT EMP_MOBILE_UK UNIQUE (mobile)
+);
+
+-- 02 코드
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile, status)
+VALUES('101', '이순신', '20770302', 'XXXXX10001', '010-1021-302', 'P');
+
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('201', '강감찬', '20750507', 'YYYYY11101', '010-2007-104');
+
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('202', '양규', '20750507', 'AAAAA10008', '010-3989-199');
+
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('401', '강감찬', '20770103', 'BBBBB20009', '010-2323-104');
+
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('402', '하공진', '20760103', 'CCCCC10010', '010-5678-104');
+
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('501', '정약용', '20770901', 'EEEEE10011', '010-2020-104');
+
+SELECT empno AS 사원번호, ename AS 이름, hire_date AS 입사일자, rrn AS 주민등록번호,
+       mobile AS 이동전화번호, status AS 재직상태
+FROM emp;
+
+-- 03 코드
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('501', '이율곡', '20771224', 'YYYYY', '010-2012-1515');
+
+-- 04 코드
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('502', '이율곡', '20771224', 'YYYYY', '010-2012-1515');
+
+-- 05 코드
+SELECT *
+FROM emp;
+
+-- 06 코드
+INSERT INTO emp(empno, ename, hire_date, rrn)
+VALUES('601', '장보고', '20771224', 'YYYYY');
+
+-- 07 코드
+INSERT INTO emp(empno, ename, hire_date, rrn)
+VALUES('601', '장보고', '20771224', 'CCCCC');
+
+-- 08 코드
+SELECT *
+FROM emp;
+
+-- 09 코드
+INSERT INTO emp(empno, ename, hire_date, rrn, mobile)
+VALUES('801', '이순신', '20780303', 'XXXXX10001', '010-1021-302');
+
+-- 10 코드
+INSERT INTO emp(empno, ename, hire_date, rrn)
+VALUES('801', '이순신', '20780303', 'XXXXX10001');
+
+-- 11 코드
+SELECT *
+FROM emp;
+
+-- 12 코드
+UPDATE emp
+SET mobile = '010-8088-808'
+WHERE empno = '801';
+
+-- 참조 무결성 예시: 외래키
+-- 01 코드
+-- 회사T 테이블 생성
+CREATE TABLE 회사T (
+    회사번호 int NOT NULL AUTO_INCREMENT,
+    회사명 varchar(50) NOT NULL,
+    창립자 varchar(20) NOT NULL,
+    창립일 varchar(10),
+    주소 varchar(200),
+    CONSTRAINT 회사_PK PRIMARY KEY (회사번호)
+);
+
+-- 아티스트T 테이블 생성
+CREATE TABLE 아티스트T (
+    아티스트번호 int NOT NULL AUTO_INCREMENT,
+    아티스트 varchar(50) NOT NULL,
+    타입 varchar(10) NOT NULL,
+    소속회사번호 int,
+    CONSTRAINT 아티스트_PK PRIMARY KEY (아티스트번호),
+    CONSTRAINT 아티스트_소속회사번호_FK FOREIGN KEY (소속회사번호) REFERENCES 회사T (회사번호)
+);
+
+-- 02 코드
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('EDAM Entertainment', '배종한', '2019-12-10', '서울시 강남구 테헤란로 103길 17');
+
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('와이지엔터테인먼트', '양현석', '1998-02-24', '서울시 마포구 희우정로 1가 3');
+
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('빅히트뮤직', '방시혁', '2005-02-24', '서울시 용산구 한강대로 42');
+
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('JYP ENT', '박진영', '1996-04-25', '서울시 강남구 강동대로 205');
+
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('에스엠', '이수만', '1995-02-04', '서울시 성동구 왕십리로 83-21');
+
+SELECT 회사번호, 회사명, 창립자, 창립일, 주소
+FROM 회사T;
+
+-- 03 코드
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('아이유', '솔로', 1);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('AKMU', '그룹', 2);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('방탄소년단', '그룹', 3);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('블랙핑크', '그룹', 2);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('ITZY', '그룹', 4);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('레드벨벳', '그룹', 5);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('보아', '솔로', 5);
+
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('2PM', '그룹', 4);
+
+SELECT 아티스트, 타입, 소속회사번호
+FROM 아티스트T;
+
+-- 04 코드
+INSERT INTO 아티스트T (아티스트, 타입, 소속회사번호)
+VALUES('이무진', '솔로', 6);
+
+-- 05 코드
+INSERT INTO 아티스트T (아티스트, 타입)
+VALUES('이무진','솔로');
+
+SELECT 아티스트, 타입, 소속회사번호
+FROM 아티스트T;
+
+-- 06 코드
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('쇼플레이엔터테인먼트', '임동균', '2020-04-20', '서울시 강남구 학동로 7길 29');
+
+SELECT 회사번호, 회사명, 창립자, 창립일, 주소
+FROM 회사T;
+
+-- 07 코드
+UPDATE 아티스트T
+SET 소속회사번호 = 6
+WHERE 아티스트= '이무진';
+
+SELECT *
+FROM 아티스트T;
+
+-- 08 코드
+DELETE FROM 회사T
+WHERE 회사번호 = 1;
+
+-- 09 코드
+INSERT INTO 회사T(회사명, 창립자, 창립일, 주소)
+VALUES('하이브', '방시혁', '2005-02-05', '서울시 용산구 한강대로 42');
+
+SELECT *
+FROM 회사T;
+
+-- 10 코드
+DELETE FROM 회사T
+WHERE 회사번호 = 7;
+
+SELECT *
+FROM 회사T;
+
+-- 의미 무결성 예시: CHECK
+-- 01 코드
+CREATE TABLE 인물T (
+    인물번호 int NOT NULL AUTO_INCREMENT,
+    이름 varchar(255) NOT NULL,
+    나이 int CHECK (나이 BETWEEN 0 AND 150), -- 0 <= 나이 <= 150 범위
+    생년월일 date,
+    성별 char(1) CHECK (성별 IN ('1','2')), -- 성별은 1 또는 2
+    다른이름 varchar(255),
+    CONSTRAINT 인물T_PK PRIMARY KEY (인물번호)
+);
+
+-- 02 코드
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('아이유', 31, '1993-05-16', '2', '이지은');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별)
+VALUES ('이찬혁', 28, '1996-09-12', '1');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('제니', 28, '1996-01-26', '2', '김제니');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별)
+VALUES ('이무진', 24, '2000-12-28', '1');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('로제', 27, '1997-02-11', '2', '박재영');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('지수', 29, '1995-01-03', '2', '김지수');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('정국', 27, '1997-09-01', '1', '김정국');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별)
+VALUES ('이수현', 25, '1999-05-04', '2');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('지민', 29, '1995-10-13', '1', '박지민');
+
+INSERT INTO 인물T (이름, 나이, 생년월일, 성별, 다른이름)
+VALUES ('리사', 27, '1997-03-27', '2', '라리사마노반');
+
+SELECT *
+FROM 인물T;
